@@ -1,27 +1,27 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTimer } from "react-timer-hook";
 import Button from "../ui/button/Button";
+
 import {
-  VscDebugStart,
-  VscDebugPause,
-  VscDebugRestart,
-  VscDebugContinue,
-} from "react-icons/vsc";
-import {
-  CircularProgressbar,
   CircularProgressbarWithChildren,
   buildStyles,
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
+import { convertMinutesToExpiryDate } from "../../utils/";
+import useTimerPomodoro from "@/app/hooks/useTimerPomodoro";
+import { useRouter } from "next/navigation";
 interface TimerProps {
-  expiryTime: Date;
+  expiryMinutes: number;
 }
 
-const Timer: FC<TimerProps> = ({ expiryTime }) => {
+const Timer: FC<TimerProps> = ({ expiryMinutes }) => {
   const time = new Date();
   time.setSeconds(time.getSeconds() + 0);
+  const router = useRouter();
+  const { nextStep, count } = useTimerPomodoro();
+  const [routeTo, setRouteTo] = useState<string | null | undefined>(null);
 
   const {
     seconds,
@@ -36,20 +36,49 @@ const Timer: FC<TimerProps> = ({ expiryTime }) => {
   } = useTimer({
     expiryTimestamp: time,
     autoStart: false,
-    onExpire: () => console.warn("onExpire called"),
+    onExpire: () => {
+      setRouteTo(nextStep());
+    },
   });
 
-  useEffect(() => {
-    restart(expiryTime);
-  }, [expiryTime, restart]);
+  const [progressValue, setProgressValue] = useState(0);
 
-  const percentage = 66;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgressValue((prevValue) => prevValue + 60); // Incrementar en 60 segundos (1 minuto)
+    }, 60000); // Actualizar cada minuto (60000 milisegundos)
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (progressValue >= expiryMinutes * 60) {
+      // Si hemos alcanzado el límite de segundos, detenemos el timer
+      pause();
+    }
+  }, [progressValue, expiryMinutes, pause]);
+
+  const percentage = Math.min(
+    (progressValue / (expiryMinutes * 60)) * 100,
+    100
+  ); // Calcular el porcentaje completad
+
+  useEffect(() => {
+    const expiryDate = convertMinutesToExpiryDate(expiryMinutes);
+    restart(expiryDate);
+  }, [expiryMinutes, restart]);
+
+  useEffect(() => {
+    if (routeTo) {
+      router.push(routeTo);
+    }
+  }, [routeTo, router]);
 
   return (
     <div className="flex flex-col justify-items-center items-center w-full h-full">
       <div className="w-3/5 md:w-4/12">
         <CircularProgressbarWithChildren
-          value={66}
+          value={percentage}
           className="h-auto opacity-90"
           strokeWidth={5}
           styles={buildStyles({
@@ -66,6 +95,7 @@ const Timer: FC<TimerProps> = ({ expiryTime }) => {
       <div className="flex justify-center">
         <p className="text-white text-2xl">{isRunning ? "Focus" : "Rest"}</p>
       </div>
+      <p className="text-white text-2xl">Intervalo : {count}</p>
       <div className="w-full">
         <div className="flex justify-center"></div>;
       </div>
