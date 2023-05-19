@@ -1,16 +1,28 @@
 "use client";
 import { FC, useState } from "react";
 import useSettingModal from "@/app/hooks/useSettingsModal";
-import { ISettingsInput } from "@/app/types/setting";
+import { ISettingsInput } from "@/app/types/";
 import { useForm } from "react-hook-form";
 import Heading from "../heading/Heading";
 import Input from "../inputs/Input";
 import Modal from "./Modal";
+import useTimerPomodoro from "@/app/hooks/useTimerPomodoro";
 
 const SettingModal = () => {
   const settingModal = useSettingModal();
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const {
+    pomodoro,
+    shortBreak,
+    longBreak,
+    interval,
+    setPomodoro,
+    setShortBreak,
+    setLongBreak,
+    setInterval,
+  } = useTimerPomodoro();
 
   const {
     register,
@@ -19,10 +31,10 @@ const SettingModal = () => {
   } = useForm<ISettingsInput>({
     mode: "onChange",
     defaultValues: {
-      pomodoroTimer: 0,
-      longTimer: 0,
-      shortTimer: 0,
-      interval: 0,
+      pomodoroTimer: pomodoro,
+      shortTimer: shortBreak,
+      longTimer: longBreak,
+      interval: interval,
     },
   });
 
@@ -30,7 +42,11 @@ const SettingModal = () => {
     //si el formulario no es válido, no ejecuta el resto de la funcion
     if (!isValid) return;
 
-    console.log(formData);
+    setPomodoro(formData.pomodoroTimer);
+    setShortBreak(formData.shortTimer);
+    setLongBreak(formData.longTimer);
+    setInterval(formData.interval);
+    settingModal.onClose();
   };
 
   const bodyContent = (
