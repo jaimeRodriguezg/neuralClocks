@@ -18,6 +18,8 @@ interface InputProps<T extends FieldValues> {
   min?: number;
   field: UseFormRegisterReturn;
   errors: FieldErrors;
+  defaultValue?: string | number | readonly string[] | undefined;
+  placholder?: string;
 }
 
 // dejamos el componente generico, donde se
@@ -32,6 +34,8 @@ const Input = <T extends FieldValues>({
   formatPrice,
   errors,
   field,
+  defaultValue,
+  placholder,
 }: InputProps<T>): JSX.Element => {
   return (
     <div className="w-full relative">
@@ -50,7 +54,8 @@ const Input = <T extends FieldValues>({
         {...field}
         id={id as string}
         disabled={disabled}
-        placeholder=" "
+        defaultValue={defaultValue}
+        placeholder={placholder}
         type={type}
         className={`
               peer
