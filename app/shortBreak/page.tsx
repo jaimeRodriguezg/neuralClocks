@@ -1,10 +1,10 @@
-import React from "react";
+"use client";
+import useTimerPomodoro from "@/app/hooks/useTimerPomodoro";
 import Timer from "../components/timer/Timer";
 
-const shortBreak = () => {
-  const time = new Date();
-  time.setSeconds(time.getSeconds() + 600);
-  return <Timer expiryTime={time} />;
+const ShortBreak = () => {
+  const { shortBreak } = useTimerPomodoro();
+  return <Timer expiryMinutes={shortBreak} />;
 };
 
-export default shortBreak;
+export default ShortBreak;
