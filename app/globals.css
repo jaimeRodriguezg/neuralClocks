@@ -7,3 +7,8 @@ body,
 :root {
     height:100%;
 }
+
+/* con esta animación, permitirá que el cambio de imagen en los cambios de la ruta no son tan toscos */
+.fade-transition {
+    transition: opacity 0.5s ease-in-out;
+  }
