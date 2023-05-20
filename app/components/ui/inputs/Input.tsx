@@ -1,11 +1,11 @@
-"use client";
+'use client';
 import {
   UseFormRegister,
   FieldValues,
   FieldErrors,
   UseFormRegisterReturn,
-} from "react-hook-form";
-import { BiDollar } from "react-icons/bi";
+} from 'react-hook-form';
+import { BiDollar } from 'react-icons/bi';
 
 // se crea una interfaz generica para que cada input tenga tipado de cada formulario
 interface InputProps<T extends FieldValues> {
@@ -15,7 +15,6 @@ interface InputProps<T extends FieldValues> {
   disabled?: boolean;
   formatPrice?: boolean;
   required?: boolean;
-  min?: number;
   field: UseFormRegisterReturn;
   errors: FieldErrors;
   defaultValue?: string | number | readonly string[] | undefined;
@@ -70,12 +69,12 @@ const Input = <T extends FieldValues>({
               transition
               disabled:opacity-70
               disabled:cursor-not-allowed
-              ${formatPrice ? "pl-9" : "pl-4"}
-              ${errors[id as string] ? "border-rose-500" : "border-neutral-300"}
+              ${formatPrice ? 'pl-9' : 'pl-4'}
+              ${errors[id as string] ? 'border-rose-500' : 'border-neutral-300'}
               ${
                 errors[id as string]
-                  ? "focus:border-rose-500"
-                  : "focus:border-black"
+                  ? 'focus:border-rose-500'
+                  : 'focus:border-black'
               }
             `}
       />
@@ -89,12 +88,12 @@ const Input = <T extends FieldValues>({
               top-5 
               z-10 
               origin-[0] 
-              ${formatPrice ? "left-9" : "left-4"}
+              ${formatPrice ? 'left-9' : 'left-4'}
               peer-placeholder-shown:scale-100 
               peer-placeholder-shown:translate-y-0 
               peer-focus:scale-75
               peer-focus:-translate-y-4
-              ${errors[id as string] ? "text-rose-500" : "text-zinc-400"}
+              ${errors[id as string] ? 'text-rose-500' : 'text-zinc-400'}
             `}
       >
         {label}

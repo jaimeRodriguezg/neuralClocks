@@ -63,32 +63,29 @@ const SettingModal: FC = () => {
       />
       <div className="flex gap-4">
         <Input
-          field={register('pomodoroTimer', { min: 0 })}
+          field={register('pomodoroTimer', { required: true, min: 1, max: 60 })}
           id="pomodoroTimer"
           label="Pomodoro"
           disabled={isLoading}
           errors={errors}
-          min={0}
           type="number"
           required
         />
         <Input
-          field={register('shortTimer', { min: 0 })}
+          field={register('shortTimer', { required: true, min: 1, max: 60 })}
           id="shortTimer"
           label="shortTimer"
           disabled={isLoading}
           errors={errors}
-          min={0}
           type="number"
           required
         />
         <Input
-          field={register('longTimer', { min: 0 })}
+          field={register('longTimer', { required: true, min: 1, max: 60 })}
           id="longTimer"
           label="longTimer"
           disabled={isLoading}
           errors={errors}
-          min={0}
           type="number"
           required
         />
@@ -98,12 +95,12 @@ const SettingModal: FC = () => {
         Configura cantidad de intervalos
       </div>
       <Input
-        field={register('interval', { min: 0 })}
+        field={register('interval', { required: true, min: 1, max: 10 })}
         id="interval"
         label="interval"
         disabled={isLoading}
         errors={errors}
-        min={0}
+        type="number"
         required
       />
     </div>
