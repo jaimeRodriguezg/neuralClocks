@@ -16,7 +16,7 @@ const Tab: FC<TabProp> = ({ title, route }) => {
       onClick={() => router.push(route)}
       className={`${
         pathname === route ? 'bg-gray-100' : 'null'
-      } flex justify-center w-[200px] border-[1px] border-neutral-900 rounded-full cursor-pointer hover:shadow-md transition`}
+      } flex justify-center w-[180px] border-[1px] border-neutral-900 rounded-full cursor-pointer hover:shadow-md transition`}
     >
       {title}
     </div>

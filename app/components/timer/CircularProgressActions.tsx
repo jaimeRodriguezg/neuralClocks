@@ -26,7 +26,7 @@ const CircularProgressActions: FC<CircularProgressActionsProps> = ({
   return (
     <>
       <div className="flex w-full justify-center align-middle mt-10">
-        <div className="flex flex-wrap md:flex-nowrap w-[500px] gap-10  pl-5 pr-5 sm:pl-3 sm:pr-3">
+        <div className="flex flex-wrap sm:flex-nowrap w-[500px] gap-10  pl-5 pr-5 sm:pl-3 sm:pr-3">
           <Button
             small
             outline

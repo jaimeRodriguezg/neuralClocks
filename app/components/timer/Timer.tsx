@@ -72,7 +72,7 @@ const Timer: FC<TimerProps> = ({ expiryMinutes }) => {
 
   return (
     <div className="flex flex-col  justify-items-center items-center w-full h-full">
-      <div className="w-3/5 md:w-[500px] mt-5">
+      <div className="w-3/5 md:w-[400px] mt-5">
         <CircularProgress
           hours={hours}
           percentage={percentage}
