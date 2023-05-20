@@ -1,6 +1,6 @@
-"use client";
-import { FC, MouseEvent } from "react";
-import { IconType } from "react-icons";
+'use client';
+import { FC, MouseEvent } from 'react';
+import { IconType } from 'react-icons';
 
 interface ButtonProps {
   label: string;
@@ -24,15 +24,15 @@ const Button: FC<ButtonProps> = ({
   return (
     <button
       className={`relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:opacity-80 transition w-${
-        width ? width : "full"
+        width ? width : 'full'
       } 
-      ${outline ? "bg-white" : "bg-green-400"} 
-      ${outline ? "border-white" : "border-green-400"} 
-      ${outline ? "text-black" : "text-white"} 
-      ${small ? "py-1" : "py-3"} 
-      ${small ? "text-sm" : "text-md"} 
-      ${small ? "font-light" : "font-semibold"} 
-      ${small ? "border-[1px]" : "border-2"} 
+      ${outline ? 'bg-white' : 'bg-green-400'} 
+      ${outline ? 'border-white' : 'border-green-400'} 
+      ${outline ? 'text-black' : 'text-white'} 
+      ${small ? 'py-1' : 'py-3'} 
+      ${small ? 'text-sm' : 'text-md'} 
+      ${small ? 'font-normal' : 'font-semibold'} 
+      ${small ? 'border-[1px]' : 'border-2'} 
       `}
       disabled={disabled}
       onClick={onClick}

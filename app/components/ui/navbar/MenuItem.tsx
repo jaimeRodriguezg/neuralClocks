@@ -1,5 +1,5 @@
-"use client";
-import { FC } from "react";
+'use client';
+import { FC } from 'react';
 
 interface MenuItemProps {
   onClick: () => void;

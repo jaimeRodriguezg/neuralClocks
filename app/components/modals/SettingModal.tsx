@@ -1,14 +1,14 @@
-"use client";
-import { FC, useState } from "react";
-import useSettingModal from "@/app/hooks/useSettingsModal";
-import { ISettingsInput } from "@/app/types/";
-import { useForm } from "react-hook-form";
-import Heading from "../heading/Heading";
-import Input from "../inputs/Input";
-import Modal from "./Modal";
-import useTimerPomodoro from "@/app/hooks/useTimerPomodoro";
+'use client';
+import { FC, useContext, useState } from 'react';
+import useSettingModal from '@/app/hooks/useSettingsModal';
+import { ISettingsInput } from '@/app/types/';
+import { useForm } from 'react-hook-form';
+import Heading from '../ui/heading/Heading';
+import Input from '../ui/inputs/Input';
+import Modal from './Modal';
+import { TimerContext } from '@/app/context';
 
-const SettingModal = () => {
+const SettingModal: FC = () => {
   const settingModal = useSettingModal();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -22,14 +22,15 @@ const SettingModal = () => {
     setShortBreak,
     setLongBreak,
     setInterval,
-  } = useTimerPomodoro();
+    restartProcess,
+  } = useContext(TimerContext);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<ISettingsInput>({
-    mode: "onChange",
+    mode: 'onChange',
     defaultValues: {
       pomodoroTimer: pomodoro,
       shortTimer: shortBreak,
@@ -57,7 +58,7 @@ const SettingModal = () => {
       />
       <div className="flex gap-4">
         <Input
-          field={register("pomodoroTimer", { min: 0 })}
+          field={register('pomodoroTimer', { min: 0 })}
           id="pomodoroTimer"
           label="Pomodoro"
           disabled={isLoading}
@@ -66,7 +67,7 @@ const SettingModal = () => {
           required
         />
         <Input
-          field={register("shortTimer", { min: 0 })}
+          field={register('shortTimer', { min: 0 })}
           id="shortTimer"
           label="shortTimer"
           disabled={isLoading}
@@ -75,7 +76,7 @@ const SettingModal = () => {
           required
         />
         <Input
-          field={register("longTimer", { min: 0 })}
+          field={register('longTimer', { min: 0 })}
           id="longTimer"
           label="longTimer"
           disabled={isLoading}
@@ -89,7 +90,7 @@ const SettingModal = () => {
         Configura cantidad de intervalos
       </div>
       <Input
-        field={register("interval", { min: 0 })}
+        field={register('interval', { min: 0 })}
         id="interval"
         label="interval"
         disabled={isLoading}
@@ -106,8 +107,14 @@ const SettingModal = () => {
       isOpen={settingModal.isOpen}
       title="Configuración General"
       actionLabel="Guardar"
+      secondaryActionLabel="Restablecer Pomodoro"
+      secondaryAction={() => {
+        restartProcess();
+      }}
       onClose={settingModal.onClose}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={() => {
+        handleSubmit(onSubmit);
+      }}
       body={bodyContent}
     />
   );

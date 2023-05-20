@@ -1,5 +1,5 @@
 export enum ErouteNames {
-  "DEFAULT" = "/",
-  "SHORTBREAK" = "/shortBreak",
-  "LONGBREAK" = "/longBreak",
+  'DEFAULT' = '/',
+  'SHORTBREAK' = '/shortBreak',
+  'LONGBREAK' = '/longBreak',
 }

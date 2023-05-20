@@ -1,14 +1,19 @@
-import Main from "./components/ui/main/Main";
-import Navbar from "./components/ui/navbar/Navbar";
-import "./globals.css";
-import { Inter } from "next/font/google";
-import SettingModal from "./components/ui/modal/SettingModal";
+import Main from './components/ui/main/Main';
+import Navbar from './components/ui/navbar/Navbar';
+import { Inter } from 'next/font/google';
+import Providers from './providers/Providers';
 
-const inter = Inter({ subsets: ["latin"] });
+import './globals.css';
+import SettingModal from './components/modals/SettingModal';
+import RegisterModal from './components/modals/RegisterModal';
+import LoginModal from './components/modals/LoginModal';
+import ConfirmationModal from './components/modals/ConfirmationModal';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: "NeuralClocks",
-  description: "Pomodoro",
+  title: 'NeuralClocks',
+  description: 'Pomodoro',
 };
 
 export default function RootLayout({
@@ -19,14 +24,19 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
-        {/* Modals */}
-        <SettingModal />
-        {/* Navbar */}
-        <nav>
-          <Navbar />
-        </nav>
-        {/* Main */}
-        <Main>{children}</Main>
+        <Providers>
+          {/* Modals */}
+          <SettingModal />
+          <RegisterModal />
+          <LoginModal />
+          <ConfirmationModal />
+          {/* Navbar */}
+          <nav>
+            <Navbar />
+          </nav>
+          {/* Main */}
+          <Main>{children}</Main>
+        </Providers>
       </body>
     </html>
   );

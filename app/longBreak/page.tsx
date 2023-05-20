@@ -1,9 +1,10 @@
-"use client";
-import useTimerPomodoro from "@/app/hooks/useTimerPomodoro";
-import Timer from "../components/timer/Timer";
+'use client';
+import { useContext } from 'react';
+import { TimerContext } from '../context';
+import Timer from '../components/timer/Timer';
 
 const LongBreak = () => {
-  const { longBreak } = useTimerPomodoro();
+  const { longBreak } = useContext(TimerContext);
   return <Timer expiryMinutes={longBreak} />;
 };
 
