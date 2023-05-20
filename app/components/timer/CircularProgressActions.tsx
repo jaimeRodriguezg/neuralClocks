@@ -1,27 +1,22 @@
 'use client';
 import { FC } from 'react';
 import Button from '../ui/button/Button';
-import { convertMinutesToExpiryDate } from '@/app/utils';
 import { TfiReload } from 'react-icons/tfi';
 
 interface CircularProgressActionsProps {
   pause: () => void;
   resume: () => void;
-  restart: (newExpiryTimestamp: Date, autoStart?: boolean | undefined) => void;
-  expiryMinutes: number;
   isFinishProcess: boolean;
   restartProcess: () => void;
-  setIsPaused: (isPaused: boolean) => void;
+  restartTimer: () => void;
 }
 
 const CircularProgressActions: FC<CircularProgressActionsProps> = ({
   pause,
   resume,
-  restart,
-  expiryMinutes,
   isFinishProcess,
   restartProcess,
-  setIsPaused,
+  restartTimer,
 }) => {
   return (
     <>
@@ -33,7 +28,6 @@ const CircularProgressActions: FC<CircularProgressActionsProps> = ({
             label="Start"
             onClick={() => {
               resume();
-              setIsPaused(false);
             }}
           />
           <Button
@@ -42,18 +36,9 @@ const CircularProgressActions: FC<CircularProgressActionsProps> = ({
             label="Pause"
             onClick={() => {
               pause();
-              setIsPaused(true);
             }}
           />
-          <Button
-            small
-            outline
-            label="Restart"
-            onClick={() => {
-              restart(convertMinutesToExpiryDate(expiryMinutes));
-              setIsPaused(false);
-            }}
-          />
+          <Button small outline label="Restart" onClick={restartTimer} />
         </div>
       </div>
       {isFinishProcess && (

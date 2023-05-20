@@ -36,17 +36,14 @@ const Modal: FC<ModalProps> = ({
   secondaryAction,
   secondaryActionLabel,
 }) => {
-  const { setIsPaused } = useContext(TimerContext);
   const [showModal, setShowModal] = useState(isOpen);
 
   useEffect(() => {
-    setIsPaused(false);
     setShowModal(isOpen);
   }, [isOpen]);
 
   const handleClose = useCallback(() => {
     if (disabled) return;
-    setIsPaused(false);
     setShowModal(false);
     setTimeout(() => {
       onClose();

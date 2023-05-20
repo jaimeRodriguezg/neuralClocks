@@ -11,18 +11,14 @@ export interface TimerState {
   longBreak: number;
   interval: number;
   count: number;
-  isPaused: boolean;
-  percentage: number;
 }
 
 const TimerInitialState: TimerState = {
-  pomodoro: 25,
-  shortBreak: 5,
-  longBreak: 15,
+  pomodoro: 1,
+  shortBreak: 1,
+  longBreak: 1,
   interval: 4,
   count: 0,
-  isPaused: false,
-  percentage: 0,
 };
 
 interface Props {
@@ -77,14 +73,6 @@ export const TimerProvider: FC<Props> = ({ children }) => {
     dispatch({ type: '[Timer] - set Counter', payload: counter });
   };
 
-  const setIsPaused = (isPaused: boolean) => {
-    dispatch({ type: '[Timer] - set isPaused', payload: isPaused });
-  };
-
-  const setPercentage = (percentage: number) => {
-    dispatch({ type: '[Timer] - set Percentage', payload: percentage });
-  };
-
   //se restablece todo el proceso y se redirije a la ruta default
   const restartProcess = () => {
     const newState: TimerState = {
@@ -93,8 +81,6 @@ export const TimerProvider: FC<Props> = ({ children }) => {
       longBreak: state.longBreak,
       pomodoro: state.pomodoro,
       shortBreak: state.pomodoro,
-      isPaused: false,
-      percentage: 0,
     };
     dispatch({ type: '[Timer] - restart', payload: newState });
     if (currentRoute === ErouteNames.DEFAULT) {
@@ -115,9 +101,7 @@ export const TimerProvider: FC<Props> = ({ children }) => {
         setLongBreak,
         setInterval,
         restartProcess,
-        setIsPaused,
         setCounter,
-        setPercentage,
       }}
     >
       {children}

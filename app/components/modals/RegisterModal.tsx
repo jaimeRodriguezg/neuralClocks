@@ -1,6 +1,5 @@
 'use client';
 import { FC, useCallback, useState } from 'react';
-import { FcGoogle } from 'react-icons/fc';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import useRegisterModal from '@/app/hooks/useRegisterModal';
 import Modal from './Modal';
@@ -11,7 +10,6 @@ import useConfirmationModal from '@/app/hooks/useConfirmationModal';
 import { IRegisterInput } from '@/app/types/setting';
 import Heading from '../ui/heading/Heading';
 import Input from '../ui/inputs/Input';
-import Button from '../ui/button/Button';
 
 const RegisterModal: FC = () => {
   const registerModal = useRegisterModal();
@@ -107,12 +105,6 @@ const RegisterModal: FC = () => {
   const footerContent = (
     <div className="flex flex-col gap-4 mt-3">
       <hr />
-      <Button
-        outline
-        label="Continue with Google"
-        icon={FcGoogle}
-        onClick={() => {}}
-      />
 
       <div
         className="

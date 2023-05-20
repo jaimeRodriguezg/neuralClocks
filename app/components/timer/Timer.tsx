@@ -1,5 +1,5 @@
 'use client';
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { useTimer } from 'react-timer-hook';
 import { convertMinutesToExpiryDate } from '../../utils/';
 import { TimerContext } from '@/app/context';
@@ -14,18 +14,12 @@ interface TimerProps {
 
 const Timer: FC<TimerProps> = ({ expiryMinutes }) => {
   const pathName = usePathname();
-  const { nextStep, count, restartProcess, isPaused, setIsPaused } =
-    useContext(TimerContext);
-  const [progressValue, setProgressValue] = useState(0);
-  const [percentage, setPercentage] = useState(0);
-  const [isFinishProcess, setIsFinishProcess] = useState(false);
-
-  //para evitar problemas de renderizado entre el cliente y el servidor, seteamos en 0 como initial state en el useTimer
-  const time = new Date();
-  time.setSeconds(time.getSeconds() + 0);
+  const { nextStep, count, restartProcess } = useContext(TimerContext);
+  const [percentage, setPercentage] = useState<number>(0);
+  const [isFinishProcess, setIsFinishProcess] = useState<boolean>(false);
 
   const { seconds, minutes, isRunning, pause, resume, restart } = useTimer({
-    expiryTimestamp: time,
+    expiryTimestamp: convertMinutesToExpiryDate(expiryMinutes),
     autoStart: false,
     onExpire: () => {
       nextStep();
@@ -34,47 +28,37 @@ const Timer: FC<TimerProps> = ({ expiryMinutes }) => {
       }
     },
   });
+  const counterMinutesRef = useRef<number>(-1);
+  const initialMinutesRef = useRef<number>(expiryMinutes);
 
-  //seteamos los minutos al momento de renderizar el componente
-  useEffect(() => {
-    console.log('entre', expiryMinutes);
-    const expiryDate = convertMinutesToExpiryDate(expiryMinutes);
-    restart(expiryDate);
-  }, [expiryMinutes, restart]);
+  const [valuePerPercentage, setValuePerPercentage] = useState(
+    initialMinutesRef.current !== 0
+      ? Math.floor(100 / initialMinutesRef.current)
+      : 0,
+  );
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isPaused) {
-        // Verificar si el timer está en pausa
-        setProgressValue((prevValue) => prevValue + 60); // Incrementar en 60 segundos (1 minuto)
-      }
-    }, 60000); // Actualizar cada minuto (60000 milisegundos)
-
-    return () => clearInterval(interval);
-  }, [isPaused]); // Actualizar el intervalo solo cuando cambie el estado de pausa
-
-  // Reiniciar progressValue cuando cambie expiryMinutes o se active el reinicio
-  useEffect(() => {
-    setProgressValue(0);
-  }, [expiryMinutes, restart]);
-
-  useEffect(() => {
-    if (progressValue >= expiryMinutes * 60) {
-      // Si hemos alcanzado el límite de segundos, detenemos el timer
-      pause();
-    }
-  }, [progressValue, expiryMinutes, pause]);
-
-  useEffect(() => {
-    // Calculamos el porcentaje completado
-    const calculatedPercentage = Math.min(
-      (progressValue / (expiryMinutes * 60)) * 100,
-      100,
+  //funcion que restable valores y el timer
+  const restartTimer = () => {
+    counterMinutesRef.current = -1;
+    setPercentage(0);
+    initialMinutesRef.current = expiryMinutes;
+    setValuePerPercentage(
+      initialMinutesRef.current !== 0
+        ? Math.floor(100 / initialMinutesRef.current)
+        : 0,
     );
+    restart(convertMinutesToExpiryDate(expiryMinutes));
+  };
 
-    // Actualizamos el estado del porcentaje
-    setPercentage(calculatedPercentage);
-  }, [progressValue, expiryMinutes]);
+  useEffect(() => {
+    restartTimer();
+  }, [expiryMinutes, restart]);
+
+  useEffect(() => {
+    // Ha pasado 1 minuto, calculamos el nuevo porcentaje de la barra circurlar
+    setPercentage(valuePerPercentage * counterMinutesRef.current);
+    counterMinutesRef.current = counterMinutesRef.current + 1;
+  }, [minutes]);
 
   //verificamos si terminaron todos los timer
   useEffect(() => {
@@ -94,11 +78,9 @@ const Timer: FC<TimerProps> = ({ expiryMinutes }) => {
       <CircularProgressActions
         pause={pause}
         resume={resume}
-        restart={restart}
-        expiryMinutes={expiryMinutes}
         isFinishProcess={isFinishProcess}
         restartProcess={restartProcess}
-        setIsPaused={setIsPaused}
+        restartTimer={restartTimer}
       />
     </div>
   );

@@ -26,15 +26,7 @@ type TimerActionType =
       payload: TimerState;
     }
   | {
-      type: '[Timer] - set isPaused';
-      payload: boolean;
-    }
-  | {
       type: '[Timer] - set Counter';
-      payload: number;
-    }
-  | {
-      type: '[Timer] - set Percentage';
       payload: number;
     };
 
@@ -72,17 +64,8 @@ export const timerReducer = (
       return {
         ...action.payload,
       };
-    case '[Timer] - set isPaused':
-      return {
-        ...state,
-        isPaused: action.payload,
-      };
+
     case '[Timer] - set Counter':
-      return {
-        ...state,
-        count: action.payload,
-      };
-    case '[Timer] - set Percentage':
       return {
         ...state,
         count: action.payload,

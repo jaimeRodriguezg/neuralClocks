@@ -2,7 +2,6 @@
 import { useCallback, useState, FC } from 'react';
 
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { FcGoogle } from 'react-icons/fc';
 
 import useRegisterModal from '@/app/hooks/useRegisterModal';
 import useLoginModal from '@/app/hooks/useLoginModal';
@@ -16,7 +15,6 @@ import {
 import Heading from '../ui/heading/Heading';
 import Input from '../ui/inputs/Input';
 import { ILoginInput } from '@/app/types/setting';
-import Button from '../ui/button/Button';
 
 const LoginModal: FC = () => {
   const loginModal = useLoginModal();
@@ -92,12 +90,6 @@ const LoginModal: FC = () => {
   const footerContent = (
     <div className="flex flex-col gap-4 mt-3">
       <hr />
-      <Button
-        outline
-        label="Continue with Google"
-        icon={FcGoogle}
-        onClick={() => {}}
-      />
 
       <div
         className="

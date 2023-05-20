@@ -1,17 +1,18 @@
 'use client';
 import { FC, useContext, useState } from 'react';
 import useSettingModal from '@/app/hooks/useSettingsModal';
-import { ISettingsInput } from '@/app/types/';
+import { ErouteNames, ISettingsInput } from '@/app/types/';
 import { useForm } from 'react-hook-form';
 import Heading from '../ui/heading/Heading';
 import Input from '../ui/inputs/Input';
 import Modal from './Modal';
 import { TimerContext } from '@/app/context';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const SettingModal: FC = () => {
   const settingModal = useSettingModal();
   const router = useRouter();
+  const pathName = usePathname();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,7 +26,6 @@ const SettingModal: FC = () => {
     setLongBreak,
     setInterval,
     setCounter,
-    setPercentage,
   } = useContext(TimerContext);
 
   const {
@@ -52,7 +52,7 @@ const SettingModal: FC = () => {
     setInterval(formData.interval);
     setCounter(0);
     settingModal.onClose();
-    router.push('/');
+    router.push(ErouteNames.DEFAULT);
   };
 
   const bodyContent = (
