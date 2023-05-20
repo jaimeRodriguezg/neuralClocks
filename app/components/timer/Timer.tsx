@@ -24,20 +24,20 @@ const Timer: FC<TimerProps> = ({ expiryMinutes }) => {
   const time = new Date();
   time.setSeconds(time.getSeconds() + 0);
 
-  const { seconds, hours, minutes, isRunning, pause, resume, restart } =
-    useTimer({
-      expiryTimestamp: time,
-      autoStart: false,
-      onExpire: () => {
-        nextStep();
-        if (pathName === ErouteNames.LONGBREAK) {
-          setIsFinishProcess(true);
-        }
-      },
-    });
+  const { seconds, minutes, isRunning, pause, resume, restart } = useTimer({
+    expiryTimestamp: time,
+    autoStart: false,
+    onExpire: () => {
+      nextStep();
+      if (pathName === ErouteNames.LONGBREAK) {
+        setIsFinishProcess(true);
+      }
+    },
+  });
 
   //seteamos los minutos al momento de renderizar el componente
   useEffect(() => {
+    console.log('entre', expiryMinutes);
     const expiryDate = convertMinutesToExpiryDate(expiryMinutes);
     restart(expiryDate);
   }, [expiryMinutes, restart]);
@@ -53,6 +53,11 @@ const Timer: FC<TimerProps> = ({ expiryMinutes }) => {
     return () => clearInterval(interval);
   }, [isPaused]); // Actualizar el intervalo solo cuando cambie el estado de pausa
 
+  // Reiniciar progressValue cuando cambie expiryMinutes o se active el reinicio
+  useEffect(() => {
+    setProgressValue(0);
+  }, [expiryMinutes, restart]);
+
   useEffect(() => {
     if (progressValue >= expiryMinutes * 60) {
       // Si hemos alcanzado el límite de segundos, detenemos el timer
@@ -61,8 +66,14 @@ const Timer: FC<TimerProps> = ({ expiryMinutes }) => {
   }, [progressValue, expiryMinutes, pause]);
 
   useEffect(() => {
-    //calculamos el porcentage completado
-    setPercentage(Math.min((progressValue / (expiryMinutes * 60)) * 100, 100));
+    // Calculamos el porcentaje completado
+    const calculatedPercentage = Math.min(
+      (progressValue / (expiryMinutes * 60)) * 100,
+      100,
+    );
+
+    // Actualizamos el estado del porcentaje
+    setPercentage(calculatedPercentage);
   }, [progressValue, expiryMinutes]);
 
   //verificamos si terminaron todos los timer
@@ -74,7 +85,6 @@ const Timer: FC<TimerProps> = ({ expiryMinutes }) => {
     <div className="flex flex-col  justify-items-center items-center w-full h-full">
       <div className="w-3/5 md:w-[400px] mt-5">
         <CircularProgress
-          hours={hours}
           percentage={percentage}
           minutes={minutes}
           seconds={seconds}

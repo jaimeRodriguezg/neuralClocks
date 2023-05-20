@@ -1,5 +1,5 @@
 'use client';
-import { FC, Dispatch, SetStateAction } from 'react';
+import { FC } from 'react';
 import Button from '../ui/button/Button';
 import { convertMinutesToExpiryDate } from '@/app/utils';
 import { TfiReload } from 'react-icons/tfi';

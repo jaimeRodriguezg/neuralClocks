@@ -8,6 +8,7 @@ interface ContextProps {
   interval: number;
   count: number;
   isPaused: boolean;
+  percentage: number;
   setPomodoro: (minutes: number) => void;
   setShortBreak: (minutes: number) => void;
   setLongBreak: (minutes: number) => void;
@@ -15,6 +16,8 @@ interface ContextProps {
   nextStep: () => void;
   restartProcess: () => void;
   setIsPaused: (isPaused: boolean) => void;
+  setCounter: (count: number) => void;
+  setPercentage: (percentage: number) => void;
 }
 
 export const TimerContext = createContext({} as ContextProps);

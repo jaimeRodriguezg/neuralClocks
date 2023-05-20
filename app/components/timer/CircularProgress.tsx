@@ -10,14 +10,12 @@ interface CircularProgressProps {
   percentage: number;
   minutes: number;
   seconds: number;
-  hours: number;
 }
 
 export const CircularProgress: FC<CircularProgressProps> = ({
   percentage,
   minutes,
   seconds,
-  hours,
 }) => {
   return (
     <CircularProgressbarWithChildren
@@ -31,7 +29,6 @@ export const CircularProgress: FC<CircularProgressProps> = ({
       })}
     >
       <div className="flex justify-center text-6xl md:text-9xl text-white">
-        <span>{hours}</span>
         <span>{minutes}</span>:<span>{seconds}</span>
       </div>
     </CircularProgressbarWithChildren>

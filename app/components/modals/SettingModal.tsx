@@ -7,9 +7,11 @@ import Heading from '../ui/heading/Heading';
 import Input from '../ui/inputs/Input';
 import Modal from './Modal';
 import { TimerContext } from '@/app/context';
+import { useRouter } from 'next/navigation';
 
 const SettingModal: FC = () => {
   const settingModal = useSettingModal();
+  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,7 +24,8 @@ const SettingModal: FC = () => {
     setShortBreak,
     setLongBreak,
     setInterval,
-    restartProcess,
+    setCounter,
+    setPercentage,
   } = useContext(TimerContext);
 
   const {
@@ -47,7 +50,9 @@ const SettingModal: FC = () => {
     setShortBreak(formData.shortTimer);
     setLongBreak(formData.longTimer);
     setInterval(formData.interval);
+    setCounter(0);
     settingModal.onClose();
+    router.push('/');
   };
 
   const bodyContent = (
@@ -64,6 +69,7 @@ const SettingModal: FC = () => {
           disabled={isLoading}
           errors={errors}
           min={0}
+          type="number"
           required
         />
         <Input
@@ -73,6 +79,7 @@ const SettingModal: FC = () => {
           disabled={isLoading}
           errors={errors}
           min={0}
+          type="number"
           required
         />
         <Input
@@ -82,6 +89,7 @@ const SettingModal: FC = () => {
           disabled={isLoading}
           errors={errors}
           min={0}
+          type="number"
           required
         />
       </div>
@@ -107,14 +115,8 @@ const SettingModal: FC = () => {
       isOpen={settingModal.isOpen}
       title="Configuración General"
       actionLabel="Guardar"
-      secondaryActionLabel="Restablecer Pomodoro"
-      secondaryAction={() => {
-        restartProcess();
-      }}
       onClose={settingModal.onClose}
-      onSubmit={() => {
-        handleSubmit(onSubmit);
-      }}
+      onSubmit={handleSubmit(onSubmit)}
       body={bodyContent}
     />
   );

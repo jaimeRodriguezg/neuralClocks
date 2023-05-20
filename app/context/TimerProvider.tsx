@@ -1,5 +1,5 @@
 'use client';
-import { FC, ReactNode, useReducer } from 'react';
+import { FC, ReactNode, useEffect, useReducer } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { TimerContext } from './TimerContext';
 import { timerReducer } from './timerReducer';
@@ -12,15 +12,17 @@ export interface TimerState {
   interval: number;
   count: number;
   isPaused: boolean;
+  percentage: number;
 }
 
 const TimerInitialState: TimerState = {
-  pomodoro: 2,
-  shortBreak: 2,
-  longBreak: 2,
-  interval: 1,
+  pomodoro: 25,
+  shortBreak: 5,
+  longBreak: 15,
+  interval: 4,
   count: 0,
   isPaused: false,
+  percentage: 0,
 };
 
 interface Props {
@@ -31,6 +33,13 @@ export const TimerProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(timerReducer, TimerInitialState);
   const currentRoute = usePathname();
   const router = useRouter();
+
+  //Precargamos paginas para mejorar UX
+  useEffect(() => {
+    router.prefetch(ErouteNames.DEFAULT);
+    router.prefetch(ErouteNames.SHORTBREAK);
+    router.prefetch(ErouteNames.LONGBREAK);
+  }, []);
 
   const nextStep = () => {
     // Estamos en el temporizador pomodoro y todavía no se completan los intervalos
@@ -64,8 +73,16 @@ export const TimerProvider: FC<Props> = ({ children }) => {
     dispatch({ type: '[Timer] - set Interval', payload: intervals });
   };
 
+  const setCounter = (counter: number) => {
+    dispatch({ type: '[Timer] - set Counter', payload: counter });
+  };
+
   const setIsPaused = (isPaused: boolean) => {
     dispatch({ type: '[Timer] - set isPaused', payload: isPaused });
+  };
+
+  const setPercentage = (percentage: number) => {
+    dispatch({ type: '[Timer] - set Percentage', payload: percentage });
   };
 
   //se restablece todo el proceso y se redirije a la ruta default
@@ -77,9 +94,14 @@ export const TimerProvider: FC<Props> = ({ children }) => {
       pomodoro: state.pomodoro,
       shortBreak: state.pomodoro,
       isPaused: false,
+      percentage: 0,
     };
     dispatch({ type: '[Timer] - restart', payload: newState });
-    router.push(ErouteNames.DEFAULT);
+    if (currentRoute === ErouteNames.DEFAULT) {
+      router.refresh();
+    } else {
+      router.push(ErouteNames.DEFAULT);
+    }
   };
 
   return (
@@ -94,6 +116,8 @@ export const TimerProvider: FC<Props> = ({ children }) => {
         setInterval,
         restartProcess,
         setIsPaused,
+        setCounter,
+        setPercentage,
       }}
     >
       {children}
