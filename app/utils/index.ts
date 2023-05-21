@@ -1,2 +1,2 @@
-export { convertMinutesToExpiryDate } from "./converMinuteToDate";
-export { getImageByRoute } from "./getImageByRoute";
+export * from './converMinuteToDate';
+export { getImageByRoute } from './getImageByRoute';

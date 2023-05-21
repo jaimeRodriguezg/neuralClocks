@@ -2,7 +2,7 @@
 import { FC, useContext } from 'react';
 import { usePathname } from 'next/navigation';
 import { ErouteNames } from '@/app/types';
-import { TimerContext } from '@/app/context';
+import { TimerContext } from '@/app/context/timer';
 
 interface CircularProgressDetailProps {
   isRunning: boolean;
