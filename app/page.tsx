@@ -1,6 +1,6 @@
 'use client';
 import { useContext } from 'react';
-import { TimerContext } from './context';
+import { TimerContext } from './context/timer';
 import Timer from '@/app/components/timer/Timer';
 
 export default function Home() {

@@ -1,9 +1,11 @@
 'use client';
-import { FC, ReactNode, useEffect, useReducer } from 'react';
+import { FC, ReactNode, useContext, useEffect, useReducer } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { TimerContext } from './TimerContext';
 import { timerReducer } from './timerReducer';
-import { ErouteNames } from '../types';
+import { ErouteNames } from '../../types';
+import { useGetSettingPomodoroQuery } from '@/graphql/generated/schema';
+import { UserContext } from '../user';
 
 export interface TimerState {
   pomodoro: number;
@@ -29,6 +31,23 @@ export const TimerProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(timerReducer, TimerInitialState);
   const currentRoute = usePathname();
   const router = useRouter();
+  const { email } = useContext(UserContext);
+
+  const { data, error } = useGetSettingPomodoroQuery({
+    variables: {
+      settingPomodoroId: email ?? '',
+    },
+    skip: !email,
+  });
+
+  useEffect(() => {
+    if (data) {
+      setPomodoro(data.settingPomodoro.pomodoro);
+      setShortBreak(data.settingPomodoro.shortTimer);
+      setLongBreak(data.settingPomodoro.longTimer);
+      setInterval(data.settingPomodoro.intervals);
+    }
+  }, [data, email]);
 
   //Precargamos paginas para mejorar UX
   useEffect(() => {
