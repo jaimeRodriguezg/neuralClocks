@@ -1,0 +1,9 @@
+mutation CreateSettingPomodoroInput(
+  $createSettingPomodoroInput: CreateSettingPomodoroInput!
+) {
+  createSettingPomodoro(
+    createSettingPomodoroInput: $createSettingPomodoroInput
+  ) {
+    ...SettingPomodoroInfoFields
+  }
+}

@@ -1,20 +1,38 @@
 'use client';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import useSettingModal from '@/app/hooks/useSettingsModal';
 import { ErouteNames, ISettingsInput } from '@/app/types/';
 import { useForm } from 'react-hook-form';
 import Heading from '../ui/heading/Heading';
 import Input from '../ui/inputs/Input';
 import Modal from './Modal';
-import { TimerContext } from '@/app/context';
-import { usePathname, useRouter } from 'next/navigation';
+import { TimerContext } from '@/app/context/timer';
+import { useRouter } from 'next/navigation';
+import { useCreateSettingPomodoroInputMutation } from '@/graphql/generated/schema';
+import toast, { Toaster } from 'react-hot-toast';
+import { UserContext } from '@/app/context/user';
 
 const SettingModal: FC = () => {
   const settingModal = useSettingModal();
   const router = useRouter();
-  const pathName = usePathname();
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const { sub, email } = useContext(UserContext);
+
+  const [createSettingPomodoroMutation] = useCreateSettingPomodoroInputMutation(
+    {
+      onCompleted: () => {
+        toast('Temporizadores creados!');
+        setIsLoading(false);
+      },
+
+      onError: (error) => {
+        toast('Error creando temporizadores');
+        setIsLoading(false);
+      },
+    },
+  );
 
   const {
     pomodoro,
@@ -32,6 +50,7 @@ const SettingModal: FC = () => {
     register,
     handleSubmit,
     formState: { errors, isValid },
+    reset,
   } = useForm<ISettingsInput>({
     mode: 'onChange',
     defaultValues: {
@@ -42,7 +61,17 @@ const SettingModal: FC = () => {
     },
   });
 
-  const onSubmit = (formData: ISettingsInput) => {
+  //si hace login un usuario, restablecemos timers
+  useEffect(() => {
+    reset({
+      interval: interval,
+      shortTimer: shortBreak,
+      longTimer: longBreak,
+      pomodoroTimer: pomodoro,
+    });
+  }, [pomodoro, interval, shortBreak, pomodoro]);
+
+  const onSubmit = async (formData: ISettingsInput) => {
     //si el formulario no es válido, no ejecuta el resto de la funcion
     if (!isValid) return;
 
@@ -53,6 +82,26 @@ const SettingModal: FC = () => {
     setCounter(0);
     settingModal.onClose();
     router.push(ErouteNames.DEFAULT);
+
+    if (email && sub) {
+      setIsLoading(true);
+      try {
+        await createSettingPomodoroMutation({
+          variables: {
+            createSettingPomodoroInput: {
+              email: email ?? '',
+              id: sub ?? '',
+              intervals: Number(formData.interval),
+              longTimer: Number(formData.shortTimer),
+              pomodoro: Number(formData.pomodoroTimer),
+              shortTimer: Number(formData.shortTimer),
+            },
+          },
+        });
+      } catch (err) {
+        toast('Error creando temporizadores');
+      }
+    }
   };
 
   const bodyContent = (
@@ -74,7 +123,7 @@ const SettingModal: FC = () => {
         <Input
           field={register('shortTimer', { required: true, min: 1, max: 60 })}
           id="shortTimer"
-          label="shortTimer"
+          label="Descanso Corto"
           disabled={isLoading}
           errors={errors}
           type="number"
@@ -83,7 +132,7 @@ const SettingModal: FC = () => {
         <Input
           field={register('longTimer', { required: true, min: 1, max: 60 })}
           id="longTimer"
-          label="longTimer"
+          label="Descanso Latgo"
           disabled={isLoading}
           errors={errors}
           type="number"
@@ -92,12 +141,12 @@ const SettingModal: FC = () => {
       </div>
 
       <div className="font-light text-neutral-500 mt-2">
-        Configura cantidad de intervalos
+        Configura la cantidad de intervalos
       </div>
       <Input
         field={register('interval', { required: true, min: 1, max: 10 })}
         id="interval"
-        label="interval"
+        label="Intervalos"
         disabled={isLoading}
         errors={errors}
         type="number"
@@ -107,15 +156,18 @@ const SettingModal: FC = () => {
   );
 
   return (
-    <Modal
-      disabled={isLoading}
-      isOpen={settingModal.isOpen}
-      title="Configuración General"
-      actionLabel="Guardar"
-      onClose={settingModal.onClose}
-      onSubmit={handleSubmit(onSubmit)}
-      body={bodyContent}
-    />
+    <>
+      <Modal
+        disabled={isLoading}
+        isOpen={settingModal.isOpen}
+        title="Configuración General"
+        actionLabel="Guardar"
+        onClose={settingModal.onClose}
+        onSubmit={handleSubmit(onSubmit)}
+        body={bodyContent}
+      />
+      <Toaster />
+    </>
   );
 };
 

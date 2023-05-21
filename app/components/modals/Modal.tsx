@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import Button from '../ui/button/Button';
-import { TimerContext } from '@/app/context';
+import { TimerContext } from '@/app/context/timer';
 
 interface ModalProps {
   isOpen?: boolean;

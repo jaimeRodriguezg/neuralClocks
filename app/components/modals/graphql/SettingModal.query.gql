@@ -1,0 +1,13 @@
+query GetSettingPomodoro($settingPomodoroId: String!) {
+  settingPomodoro(id: $settingPomodoroId) {
+    ...SettingPomodoroInfoFields
+  }
+}
+
+fragment SettingPomodoroInfoFields on SettingPomodoro {
+  id
+  shortTimer
+  pomodoro
+  longTimer
+  intervals
+}
