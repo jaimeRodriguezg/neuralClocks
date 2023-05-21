@@ -110,7 +110,7 @@ const SettingModal: FC = () => {
         title="Configuración NeuralClocks"
         subtitle="Configura tus temporizadores en minutos"
       />
-      <div className="flex gap-4">
+      <div className="flex flex-wrap md:flex-nowrap gap-4">
         <Input
           field={register('pomodoroTimer', { required: true, min: 1, max: 60 })}
           id="pomodoroTimer"
@@ -132,7 +132,7 @@ const SettingModal: FC = () => {
         <Input
           field={register('longTimer', { required: true, min: 1, max: 60 })}
           id="longTimer"
-          label="Descanso Latgo"
+          label="Descanso Largo"
           disabled={isLoading}
           errors={errors}
           type="number"
