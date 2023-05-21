@@ -44,7 +44,7 @@ const CircularProgressActions: FC<CircularProgressActionsProps> = ({
       {isFinishProcess && (
         <div
           onClick={restartProcess}
-          className="p-4 md:py-1 md:px-2 bg-slate-100 rounded-full cursor-pointer hover:shadow-md transition mt-6"
+          className="p-4 md:py-1 md:px-2 bg-slate-100 rounded-full cursor-pointer hover:shadow-md transition mt-2"
         >
           <TfiReload size={24} />
         </div>
