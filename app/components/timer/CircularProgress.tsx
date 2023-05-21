@@ -5,6 +5,7 @@ import {
   buildStyles,
 } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { formatedDate } from '@/app/utils/';
 
 interface CircularProgressProps {
   percentage: number;
@@ -29,7 +30,8 @@ export const CircularProgress: FC<CircularProgressProps> = ({
       })}
     >
       <div className="flex justify-center text-6xl md:text-9xl text-white">
-        <span>{minutes}</span>:<span>{seconds}</span>
+        <span>{formatedDate(minutes)}</span>:
+        <span>{formatedDate(seconds)}</span>
       </div>
     </CircularProgressbarWithChildren>
   );

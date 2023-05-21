@@ -2,7 +2,7 @@
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { useTimer } from 'react-timer-hook';
 import { convertMinutesToExpiryDate } from '../../utils/';
-import { TimerContext } from '@/app/context';
+import { TimerContext } from '@/app/context/timer';
 import { usePathname } from 'next/navigation';
 import { ErouteNames } from '@/app/types';
 import { CircularProgress } from './CircularProgress';

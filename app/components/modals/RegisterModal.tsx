@@ -15,7 +15,7 @@ const RegisterModal: FC = () => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const confirmationModal = useConfirmationModal();
-
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -36,9 +36,10 @@ const RegisterModal: FC = () => {
   }, [registerModal, loginModal]);
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
-
-    if (data.password !== data.confirmPassword) return;
+    if (data.password !== data.confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
 
     console.log(data);
     setIsLoading(true);
@@ -59,6 +60,7 @@ const RegisterModal: FC = () => {
         if (err) {
           console.log('Error en el registro', err);
           setIsLoading(false);
+          setError(err.message);
           return;
         }
         console.log('Registro existoso', result);
@@ -99,6 +101,7 @@ const RegisterModal: FC = () => {
         errors={errors}
         required
       />
+      {error && <p className="text-red-500">{error}</p>}
     </div>
   );
 

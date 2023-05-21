@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useState, FC } from 'react';
+import { useCallback, useState, FC, useEffect, useContext } from 'react';
 
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 
@@ -15,11 +15,14 @@ import {
 import Heading from '../ui/heading/Heading';
 import Input from '../ui/inputs/Input';
 import { ILoginInput } from '@/app/types/setting';
+import { UserContext } from '@/app/context/user';
 
 const LoginModal: FC = () => {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { setCognitoUser } = useContext(UserContext);
 
   const {
     register,
@@ -47,14 +50,20 @@ const LoginModal: FC = () => {
 
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (result) => {
-        console.log('Inicio de sesión exitoso:', result);
+        setCognitoUser(cognitoUser);
+        loginModal.onClose();
       },
       onFailure: (err) => {
+        setError(err.message);
         console.error('Error en el inicio de sesión:', err);
       },
     });
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   const onToggle = useCallback(() => {
     loginModal.onClose();
@@ -84,6 +93,7 @@ const LoginModal: FC = () => {
         field={register('password', { required: true })}
         required
       />
+      {error && <p className="text-red-500">{error}</p>}
     </div>
   );
 

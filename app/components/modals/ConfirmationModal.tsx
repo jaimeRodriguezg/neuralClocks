@@ -8,9 +8,11 @@ import { CognitoUser, userPool } from '@/app/utils/cognito';
 import Heading from '../ui/heading/Heading';
 import Input from '../ui/inputs/Input';
 import { IConfirmationInput } from '@/app/types/setting';
+import useLoginModal from '@/app/hooks/useLoginModal';
 
 const ConfirmationModal: FC = () => {
   const confirmationModal = useConfirmationModal();
+  const loginModal = useLoginModal();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -37,6 +39,10 @@ const ConfirmationModal: FC = () => {
       if (err) {
         alert(err.message || JSON.stringify(err));
         return;
+      }
+      if (result) {
+        confirmationModal.onClose();
+        loginModal.onOpen();
       }
     });
 
